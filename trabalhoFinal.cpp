@@ -21,8 +21,8 @@ int main(){
      queue<string> poucoUrgente;
      queue<string> naoUrgente;
 
-     int horaSemAtendimento;
-     int minutoSemAtendimento;
+     int horaChamada;
+     int minutoChamada;
 
      int atendidos = 0;
 
@@ -49,7 +49,7 @@ int main(){
                cin >> informacoes.minuto;
 
                if(informacoes.prioridade == 'V'){
-                    emergencia.push(informacoes.senha);
+                    emergencia.push(informacoes.senha); //Como armazena todos os dados?
                }else if(informacoes.prioridade == 'A'){
                     urgencia.push(informacoes.senha);
                }else if(informacoes.prioridade == 'D'){
@@ -59,21 +59,20 @@ int main(){
                     naoUrgente.push(informacoes.senha);
                }
      }else if(escolha == 'A'){
-          //  cout << "Digite a hora do atendimento: \n";
-          //      cin >> ;
-          // cout << "Digite o minuto do atendimento: \n";
-          // cin >> ;
-               if(!emergencia.empty()||!urgencia.empty() ||!poucoUrgente.empty() || !naoUrgente.empty() ){
+            cout << "Digite a hora do atendimento: \n";
+          cin >> horaChamada;
+           cout << "Digite o minuto do atendimento: \n";
+           cin >> minutoChamada;
+               
                     if(!emergencia.empty()){
+                         informacoes.horaAtendimento = horaChamada;
                          emergencia.pop();
-
                          atendidos ++;
 
                     }else if(!urgencia.empty()){
                          urgencia.pop();
 
                          atendidos ++;
-
 
                     }else if(!poucoUrgente.empty()){
                          poucoUrgente.pop();
@@ -84,15 +83,14 @@ int main(){
                          naoUrgente.pop();
 
                          atendidos ++;
-
-                    }
-                    //V:0 A:1 D:0 B:1 | Atendidos:1
-                    cout << "V: " << emergencia.size() << " A: " <<  urgencia.size() << " D: " <<  poucoUrgente.size() << " B: "  ;
-               }else{
+                    }else{
                cout << "Sem pacientes aguardando atendimento";
-               
-          }
+               }
           }else if(escolha == 'D'){
+               //V:0 A:1 D:0 B:1 | Atendidos:1
+                    cout << "V: " << emergencia.size() << " A: " <<  urgencia.size() << " D: " <<  poucoUrgente.size() << " B: "  ;
+
+          }else if (escolha == 'Q'){
                // --- RELATÓRIO FINAL ---
                //      Total atendidos: 3
                //      Por prioridade: V=1 A=2 D=0 B=0
