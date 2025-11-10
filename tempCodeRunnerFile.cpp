@@ -1,0 +1,1 @@
+out << "Digite a senha, o tipo da atendimento: \n V - Emergênc
