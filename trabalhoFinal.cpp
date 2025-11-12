@@ -17,20 +17,20 @@ struct paciente
 
 void atenderPaciente(queue<paciente> &fila, vector<paciente> &atendidos, int horaChamada, int minutoChamada)
 {
-     paciente atendido = fila.front(); // armazena primeiro paciente da fila que foi atendido
+     paciente atendido = fila.front();
      fila.pop();
 
      atendido.horaAtendimento = horaChamada;
      atendido.minutoAtendimento = minutoChamada;
 
-     int tempoEsperado = ((horaChamada / 60) + minutoChamada) - ((atendido.hora / 60) + atendido.minuto);
+     int tempoEsperado = (horaChamada * 60 + minutoChamada) - (atendido.hora * 60 + atendido.minuto);
 
      atendido.tempoEspera = tempoEsperado;
 
      atendidos.push_back(atendido);
 }
 
-void verificarLotacao(queue<paciente> &emergencia, queue<paciente> &urgencia, queue<paciente> &poucoUrgente, queue<paciente> &naoUrgente, int &lotacao)
+int verificarLotacao(queue<paciente> &emergencia, queue<paciente> &urgencia, queue<paciente> &poucoUrgente, queue<paciente> &naoUrgente, int &lotacao)
 {
      int soma = 0;
      soma = emergencia.size() + urgencia.size() + poucoUrgente.size() + naoUrgente.size();
@@ -38,11 +38,12 @@ void verificarLotacao(queue<paciente> &emergencia, queue<paciente> &urgencia, qu
      {
           lotacao = soma;
      }
+     return lotacao;
 }
 
 int main()
 {
-     vector<paciente> atendidos; // vetor com todos pacientes atendidos
+     vector<paciente> atendidos;
 
      queue<paciente> emergencia;
      queue<paciente> urgencia;
@@ -52,6 +53,7 @@ int main()
      int horaChamada;
      int minutoChamada;
      int lotacao = 0;
+     int esperaMaxima = 0;
 
      paciente informacoes;
 
@@ -61,15 +63,24 @@ int main()
 
      while (true)
      {
-          // cout << " \n Digite: \n C - Para cadastrar um paciente, \n A - Para atendimento, \n D - Exibir informações \n Q - Para Sair" << endl;
+          cout << " \n Digite: \n C - Para cadastrar um paciente, \n A - Para atendimento, \n D - Exibir informações \n Q - Para Sair" << endl;
           cin >> escolha;
 
           switch (escolha)
           {
           case 'C':
-          {    // IMPORTANTE: perguntar para o professor qual vai ser a forma de teste
-               // cout << "Digite a senha, o tipo da atendimento: \n V - Emergência \n A - Urgência \n D - Pouco Urgente \n B - Não Urgente \n a hora e o o minuto: \n ";
-               cin >> informacoes.senha >> informacoes.prioridade >> informacoes.hora >> informacoes.minuto;
+          {
+               cout << "Digite a senha: \n";
+               cin >> informacoes.senha;
+
+               cout << "Digite o tipo da atendimento: \n V - Emergência \n A - Urgência \n D - Pouco Urgente \n B - Não Urgente \n";
+               cin >> informacoes.prioridade;
+
+               cout << "Digite a hora: \n";
+               cin >> informacoes.hora;
+
+               cout << "Digite o minuto: \n";
+               cin >> informacoes.minuto;
 
                switch (informacoes.prioridade)
                {
@@ -91,7 +102,7 @@ int main()
           }
           case 'A':
           {
-               // cout << "Digite a hora do atendimento: \n";
+               cout << "Digite a hora e os minutos do atendimento: \n";
                cin >> horaChamada >> minutoChamada;
 
                if (!emergencia.empty())
@@ -125,7 +136,6 @@ int main()
           }
           case 'D':
 
-               // V:0 A:1 D:0 B:1 | Atendidos:1
                cout << "V: " << emergencia.size() << " A: " << urgencia.size() << " D: " << poucoUrgente.size() << " B: " << naoUrgente.size() << " | Atendidos: " << atendidos.size() << "\n";
                break;
 
@@ -152,23 +162,23 @@ int main()
                     }
                }
 
-               int esperaMaxima = 0;
-
-               for (int i = 1; i < atendidos.size(); i++)
+               if (!atendidos.empty())
                {
                     esperaMaxima = atendidos[0].tempoEspera;
-                    if (esperaMaxima < atendidos[i].tempoEspera)
+                    for (int i = 1; i < atendidos.size(); i++)
                     {
-                         esperaMaxima = atendidos[i].tempoEspera;
+                         if (atendidos[i].tempoEspera > esperaMaxima)
+                         {
+                              esperaMaxima = atendidos[i].tempoEspera;
+                         }
                     }
                }
 
-               // Fazer o claculo de transformar horas em minutos e depois somar os minutos de entreda de cadastro e subtrair com chamada
                cout << "-- Relatório Final -- \n";
-               cout << "Total atendidos: " << atendidos.size() << "\n"; //ok
+               cout << "Total atendidos: " << atendidos.size() << "\n";
                cout << "Por prioridade: V: " << atendidosEmergencia << " A: " << atendidosUrgencia << " D: " << atendidosPoucoUrgente << " B: " << atendidosNaoUrgente << endl;
-               cout << "Pico de lotação: " << lotacao << "\n"; // ok
-               cout << "Espera máxima: " << esperaMaxima << " min"; //ok
+               cout << "Pico de lotação: " << lotacao << "\n";
+               cout << "Espera máxima: " << esperaMaxima << " min";
                return 0;
                break;
           }
